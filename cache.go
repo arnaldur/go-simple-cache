@@ -9,7 +9,7 @@ var (
 	ErrCacheMiss = errors.New("cache miss")
 )
 
-type Cache interface {
+type Client interface {
 	Delete(k string) error
 	Flush() error
 	Get(k string, v interface{}) error

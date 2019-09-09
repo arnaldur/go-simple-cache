@@ -45,7 +45,7 @@ func (c *memoryCache) Set(k string, v interface{}, expire time.Duration) error {
 	return nil
 }
 
-func NewMemoryCache() Cache {
+func NewMemoryCache() Client {
 	return &memoryCache{
 		items: map[string][]byte{},
 	}

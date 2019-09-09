@@ -40,7 +40,7 @@ func (c *appengineCache) Set(k string, v interface{}, expire time.Duration) erro
 	})
 }
 
-func NewAppEngineCache(request *http.Request) Cache {
+func NewAppEngineCache(request *http.Request) Client {
 	return &appengineCache{
 		prefix: os.Getenv("GAE_SERVICE") + "/" + os.Getenv("GAE_VERSION"),
 		codec: memcache.Codec{

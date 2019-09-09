@@ -41,7 +41,7 @@ func (c *redisCache) Set(k string, v interface{}, expire time.Duration) error {
 	return c.client.Set(k, string(buf), expire).Err()
 }
 
-func NewRedisCache() Cache {
+func NewRedisCache() Client {
 	return &redisCache{
 		client: redis.NewClient(&redis.Options{
 			Addr:     "localhost:6379",
