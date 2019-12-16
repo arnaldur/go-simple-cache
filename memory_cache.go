@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -43,6 +44,14 @@ func (c *memoryCache) Set(k string, v interface{}, expire time.Duration) error {
 	c.items[k] = buf
 
 	return nil
+}
+
+func (c *memoryCache) Nearby(k string, lon, lat, radius float64) ([]Location, error) {
+	return nil, fmt.Errorf("not supported")
+}
+
+func (c *memoryCache) GeoAdd(k string, locations ...Location) error {
+	return fmt.Errorf("not supported")
 }
 
 func NewMemoryCache() Client {

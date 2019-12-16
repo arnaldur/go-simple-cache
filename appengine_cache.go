@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -38,6 +39,14 @@ func (c *appengineCache) Set(k string, v interface{}, expire time.Duration) erro
 		Object:     v,
 		Expiration: expire,
 	})
+}
+
+func (c *appengineCache) Nearby(k string, lon, lat, radius float64) ([]Location, error) {
+	return nil, fmt.Errorf("not supported")
+}
+
+func (c *appengineCache) GeoAdd(k string, locations ...Location) error {
+	return fmt.Errorf("not supported")
 }
 
 func NewAppEngineCache(request *http.Request) Client {

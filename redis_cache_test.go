@@ -56,3 +56,20 @@ func TestRedisCacheListObject(t *testing.T) {
 		t.Errorf("empty list")
 	}
 }
+
+func TestRedisCacheGeo(t *testing.T) {
+	cacheKey := "geo_list"
+	if err := cacheClient.GeoAdd(cacheKey, Location{
+		Name:      "test",
+		Longitude: 17.0,
+		Latitude:  59.0,
+	}); err != nil {
+		t.Error(err)
+	}
+
+	if locations, err := cacheClient.Nearby(cacheKey, 17.0, 59.0, 100); err != nil {
+		t.Error(err)
+	} else if len(locations) == 0 {
+		t.Errorf("empty list")
+	}
+}

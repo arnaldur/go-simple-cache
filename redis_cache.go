@@ -41,6 +41,43 @@ func (c *redisCache) Set(k string, v interface{}, expire time.Duration) error {
 	return c.client.Set(k, string(buf), expire).Err()
 }
 
+func (c *redisCache) Nearby(k string, lon, lat, radius float64) ([]Location, error) {
+	result := []Location{}
+	locations, err := c.client.GeoRadius(k, lon, lat, &redis.GeoRadiusQuery{
+		Radius:   radius,
+		Unit:     "m",
+		WithDist: true,
+	}).
+		Result()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, location := range locations {
+		result = append(result, Location{
+			Name:      location.Name,
+			Longitude: location.Longitude,
+			Latitude:  location.Latitude,
+			Distance:  location.Dist,
+		})
+	}
+
+	return result, nil
+}
+
+func (c *redisCache) GeoAdd(k string, locations ...Location) error {
+	redisLocations := []*redis.GeoLocation{}
+	for _, location := range locations {
+		redisLocations = append(redisLocations, &redis.GeoLocation{
+			Name:      location.Name,
+			Longitude: location.Longitude,
+			Latitude:  location.Latitude,
+		})
+	}
+
+	return c.client.GeoAdd(k, redisLocations...).Err()
+}
+
 func NewRedisCache(redisClient *redis.Client) Client {
 	return &redisCache{
 		client: redisClient,
