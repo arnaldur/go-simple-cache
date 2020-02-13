@@ -47,6 +47,7 @@ func (c *redisCache) Nearby(k string, lon, lat, radius float64) ([]Location, err
 		Radius:   radius,
 		Unit:     "m",
 		WithDist: true,
+		Sort:     "ASC",
 	}).
 		Result()
 	if err != nil {
