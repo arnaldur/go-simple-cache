@@ -79,6 +79,32 @@ func (c *redisCache) GeoAdd(k string, locations ...Location) error {
 	return c.client.GeoAdd(k, redisLocations...).Err()
 }
 
+func (c *redisCache) HSet(k string, f string, v interface{}, expire time.Duration) error {
+	buf, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	success := c.client.HSet(k, f, buf).Err()
+	c.client.Expire(k, expire)
+
+	return success
+}
+
+func (c *redisCache) HGet(k string, f string, v interface{}) error {
+
+	rv, err := c.client.HGet(k, f).Result()
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal([]byte(rv), v); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewRedisCache(redisClient *redis.Client) Client {
 	return &redisCache{
 		client: redisClient,
